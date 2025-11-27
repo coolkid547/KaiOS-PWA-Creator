@@ -9,6 +9,30 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Handle install prompt for this creator app
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    const btn = document.getElementById('installBtn');
+    if (btn) {
+        btn.style.display = 'inline-block';
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            deferredInstallPrompt.prompt();
+            const choice = await deferredInstallPrompt.userChoice;
+            if (choice && choice.outcome === 'accepted') {
+                btn.textContent = 'Installed';
+            } else {
+                btn.textContent = 'Install';
+            }
+            deferredInstallPrompt = null;
+            btn.disabled = false;
+            btn.style.display = 'none';
+        });
+    }
+});
+
 // Form submission handler
 document.getElementById('pwaForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -247,76 +271,6 @@ self.addEventListener('message', (event) => {
 });
 `;
 }
-// Install event
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
-      .catch((err) => {
-        console.log('Cache installation failed:', err);
-      })
-  );
-  self.skipWaiting();
-});
-
-// Activate event
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-  self.clients.claim();
-});
-
-// Fetch event - Network first, fallback to cache
-self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
-
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Clone the response
-        const clonedResponse = response.clone();
-        
-        // Cache successful responses
-        if (response.status === 200) {
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, clonedResponse);
-          });
-        }
-        
-        return response;
-      })
-      .catch(() => {
-        // Fall back to cache
-        return caches.match(event.request)
-          .then((response) => {
-            return response || caches.match('/index.html');
-          });
-      })
-  );
-});
-
-// Handle messages from clients
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
-`;
-}
 
 // Generate HTML Template
 function generateHTMLTemplate(config) {
@@ -402,9 +356,10 @@ function downloadFile(filename, content) {
 // Copy to clipboard helper
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        alert('Copied to clipboard!');
+        showToast('Copied to clipboard');
     }).catch(err => {
         console.error('Failed to copy:', err);
+        showToast('Copy failed');
     });
 }
 
@@ -413,10 +368,42 @@ function addScreenshot() {
     const screenshotsList = document.getElementById('screenshotsList');
     const screenshotDiv = document.createElement('div');
     screenshotDiv.className = 'screenshot-item';
-    screenshotDiv.innerHTML = \`
-        <input type="url" name="screenshot" placeholder="https://example.com/screenshot.png">
-        <button type="button" class="btn-small" onclick="this.parentElement.remove()">Remove</button>
-    \`;
+    screenshotDiv.innerHTML = '<input type="url" name="screenshot" placeholder="https://example.com/screenshot.png">' +
+        '<button type="button" class="btn-small" onclick="this.parentElement.remove()">Remove</button>';
     screenshotsList.appendChild(screenshotDiv);
 }
-`;
+
+// Toast helper
+function showToast(message, timeout = 2500) {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = message;
+    t.style.display = 'block';
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => {
+        t.style.display = 'none';
+    }, timeout);
+}
+
+// KaiOS back handling: "press back twice to exit" pattern
+(() => {
+    let lastBack = 0;
+    window.addEventListener('keydown', (e) => {
+        // Backspace or Escape could be used as back button on some devices
+        if (e.key === 'Backspace' || e.key === 'Escape') {
+            const el = document.activeElement;
+            // If focus is on input, let it act normally
+            if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
+            e.preventDefault();
+            const now = Date.now();
+            if (now - lastBack < 2000) {
+                // Allow default behavior (exit or history back)
+                history.back();
+            } else {
+                showToast('Press back again to exit');
+                lastBack = now;
+            }
+        }
+    });
+})();
+
