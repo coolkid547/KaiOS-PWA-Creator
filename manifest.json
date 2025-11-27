@@ -8,6 +8,10 @@
   "orientation": "portrait-primary",
   "theme_color": "#2196F3",
   "background_color": "#ffffff",
+  "developer": {
+    "name": "KaiOS PWA Creator",
+    "url": "https://github.com/coolkid547/KaiOS-PWA-Creator"
+  },
   "categories": ["productivity", "utilities"],
   "screenshots": [
     {
