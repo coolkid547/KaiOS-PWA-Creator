@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KaiOS PWA Creator - Create Progressive Web Apps for KaiOS">
+    <meta name="theme-color" content="#2196F3">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>KaiOS PWA Creator</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 KaiOS PWA Creator</h1>
+            <p class="subtitle">Create Progressive Web Apps for KaiOS Devices</p>
+        </header>
+
+        <main>
+            <section class="form-section">
+                <h2>App Configuration</h2>
+                <form id="pwaForm">
+                    <!-- Basic Information -->
+                    <div class="form-group">
+                        <label for="appName">App Name *</label>
+                        <input type="text" id="appName" name="appName" placeholder="My Awesome App" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appShortName">Short Name *</label>
+                        <input type="text" id="appShortName" name="appShortName" placeholder="MyApp" maxlength="12" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appDescription">Description</label>
+                        <textarea id="appDescription" name="appDescription" placeholder="A brief description of your app" rows="3"></textarea>
+                    </div>
+
+                    <!-- URLs -->
+                    <div class="form-group">
+                        <label for="appUrl">App URL *</label>
+                        <input type="url" id="appUrl" name="appUrl" placeholder="https://example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appStart">Start URL</label>
+                        <input type="text" id="appStart" name="appStart" placeholder="/" value="/">
+                    </div>
+
+                    <!-- Display and Theme -->
+                    <div class="form-group">
+                        <label for="appDisplay">Display Mode *</label>
+                        <select id="appDisplay" name="appDisplay" required>
+                            <option value="fullscreen">Fullscreen</option>
+                            <option value="standalone">Standalone</option>
+                            <option value="minimal-ui">Minimal UI</option>
+                            <option value="browser">Browser</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appOrientation">Orientation</label>
+                        <select id="appOrientation" name="appOrientation">
+                            <option value="portrait-primary">Portrait</option>
+                            <option value="landscape-primary">Landscape</option>
+                            <option value="any">Any</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="themeColor">Theme Color</label>
+                        <input type="color" id="themeColor" name="themeColor" value="#2196F3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bgColor">Background Color</label>
+                        <input type="color" id="bgColor" name="bgColor" value="#ffffff">
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="form-group">
+                        <label for="appCategory">Category</label>
+                        <select id="appCategory" name="appCategory">
+                            <option value="">Select a category</option>
+                            <option value="productivity">Productivity</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="games">Games</option>
+                            <option value="news">News</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="social">Social</option>
+                            <option value="sports">Sports</option>
+                            <option value="travel">Travel</option>
+                        </select>
+                    </div>
+
+                    <!-- Screenshots -->
+                    <div class="form-group">
+                        <label>Screenshots</label>
+                        <p class="help-text">Add URLs for your app screenshots (544x816 for fullscreen)</p>
+                        <div id="screenshotsList"></div>
+                        <button type="button" class="btn-secondary" onclick="addScreenshot()">+ Add Screenshot</button>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Generate PWA Files</button>
+                        <button type="reset" class="btn-secondary">Reset Form</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section" id="outputSection" style="display:none;">
+                <h2>Generated Files</h2>
+                
+                <div class="file-container">
+                    <div class="file-item">
+                        <h3>manifest.json</h3>
+                        <pre id="manifestOutput" class="code-block"></pre>
+                        <button class="btn-small" onclick="downloadFile('manifest.json', document.getElementById('manifestOutput').textContent)">Download</button>
+                        <button class="btn-small" onclick="copyToClipboard(document.getElementById('manifestOutput').textContent)">Copy</button>
+                    </div>
+
+                    <div class="file-item">
+                        <h3>sw.js (Service Worker)</h3>
+                        <pre id="swOutput" class="code-block"></pre>
+                        <button class="btn-small" onclick="downloadFile('sw.js', document.getElementById('swOutput').textContent)">Download</button>
+                        <button class="btn-small" onclick="copyToClipboard(document.getElementById('swOutput').textContent)">Copy</button>
+                    </div>
+
+                    <div class="file-item">
+                        <h3>index.html (Sample)</h3>
+                        <pre id="htmlOutput" class="code-block"></pre>
+                        <button class="btn-small" onclick="downloadFile('index.html', document.getElementById('htmlOutput').textContent)">Download</button>
+                        <button class="btn-small" onclick="copyToClipboard(document.getElementById('htmlOutput').textContent)">Copy</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 KaiOS PWA Creator | Made for KaiOS Devices</p>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

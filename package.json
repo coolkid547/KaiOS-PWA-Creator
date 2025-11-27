@@ -1,0 +1,18 @@
+{
+  "name": "kaios-pwa-creator",
+  "version": "1.0.0",
+  "description": "A PWA creator application optimized for KaiOS devices",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "build": "echo 'No build step required for this PWA'"
+  },
+  "keywords": [
+    "pwa",
+    "kaios",
+    "progressive-web-app",
+    "creator"
+  ],
+  "author": "",
+  "license": "MIT"
+}
