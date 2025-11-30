@@ -8,6 +8,9 @@
   "orientation": "portrait-primary",
   "theme_color": "#2196F3",
   "background_color": "#ffffff",
+  "prefer_related_applications": false,
+  "lang": "en-US",
+  "dir": "ltr",
   "developer": {
     "name": "ChingaApps",
     "url": "https://github.com/coolkid547/KaiOS-PWA-Creator"
@@ -16,8 +19,9 @@
   "screenshots": [
     {
       "src": "/assets/screenshot-1.png",
-      "sizes": "544x816",
-      "type": "image/png"
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ],
   "icons": [
@@ -25,7 +29,7 @@
       "src": "/assets/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "/assets/icon-96.png",
