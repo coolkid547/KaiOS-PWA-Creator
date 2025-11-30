@@ -11,6 +11,8 @@
   "prefer_related_applications": false,
   "lang": "en-US",
   "dir": "ltr",
+  "version": "1.0.0",
+  "minimum_kaios_version": "2.5",
   "developer": {
     "name": "ChingaApps",
     "url": "https://github.com/coolkid547/KaiOS-PWA-Creator"

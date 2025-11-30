@@ -26,20 +26,25 @@ python3 -m http.server 8000
 3. Download or copy the generated `manifest.json`, `sw.js`, and sample `index.html`.
 4. Integrate those files into your own web app and host them over HTTPS.
 
-## Notes and Troubleshooting
+## Beta Testing Guide
 
-- The creator is built to work well on KaiOS (small screens, limited resources).
-- If service worker registration fails, make sure you serve over HTTPS or use localhost for testing.
-- If files are not showing as tracked by git, run:
+### For Testers (App Won't Download)
 
-```bash
-cd /workspaces/KaiOS-PWA-Creator
-git add .
-git commit -m "Add KaiOS PWA Creator files"
-git push
-```
+If showing as "beta" but won't download:
+- Clear App Store Cache (Settings > Apps > App Store > Storage > Clear Cache)
+- Restart your phone
+- Verify IMEI is registered with developer
+- Check KaiOS version 2.5+ (Settings > About > OS Version)
+- Retry App Store refresh
 
-If the terminal in your environment shows filesystem provider errors (ENOPRO), try restarting your editor/IDE or running the git commands from a local terminal.
+### For Developers (Build Not Syncing)
+
+After uploading to KaiOS Marketplace:
+- Wait 15-30 minutes for sync
+- Run `npm run test` to validate manifest
+- Verify required fields: name, short_name, start_url, icons, display, orientation, minimum_kaios_version
+- Ensure HTTPS hosting (localhost for testing)
+- Re-upload if fixed
 
 ---
 
